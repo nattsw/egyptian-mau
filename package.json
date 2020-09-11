@@ -10,7 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "@slack/events-api": "^2.3.4",
-    "@slack/rtm-api": "^5.0.5",
-    "express": "^4.17.1"
+    "@slack/rtm-api": "^5.0.5"
   }
 }

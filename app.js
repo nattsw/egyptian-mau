@@ -1,21 +1,31 @@
-const { WebClient } = require('@slack/web-api');
+const { RTMClient } = require('@slack/rtm-api');
+const token = process.env.SLACK_BOT_TOKEN;
 
-// Create a new instance of the WebClient class with the token read from your environment variable
-const web = new WebClient(process.env.SLACK_TOKEN);
-// The current date
-const currentTime = new Date().toTimeString();
+const channels = {
+}
+const users = {
+}
+
+const rtm = new RTMClient(token);
+
+rtm.on('ready', async () => {
+  try {
+    await rtm.subscribePresence(Object.keys(users));
+    console.log(`Subscribed to presence at ${new Date()}`);
+  } catch (error) {
+    console.log('Failed to subscribe to presence, error: ', error);
+  }
+});
+
+rtm.on('presence_change', (event) => {
+  console.log(`${users[event.user]} is ${event.presence}`);
+  if (users[event.user] === 'Gabe') {
+    rtm.sendMessage('Still alive', 'bot-test')
+  } else if (users[event.user] === 'Francis') {
+
+  }
+});
 
 (async () => {
-
-  try {
-    // Use the `chat.postMessage` method to send a message from this app
-    await web.chat.postMessage({
-      channel: '#general',
-      text: `The current time is ${currentTime}`,
-    });
-  } catch (error) {
-    console.log(error);
-  }
-
-  console.log('Message posted!');
+  await rtm.start();
 })();
